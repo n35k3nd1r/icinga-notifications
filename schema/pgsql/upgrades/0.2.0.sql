@@ -52,3 +52,13 @@ UPDATE source SET listener_username = CONCAT('source-', source.id) WHERE deleted
 ALTER TABLE source
     ADD CONSTRAINT uk_source_listener_username UNIQUE (listener_username),
     ADD CONSTRAINT ck_source_listener_username_or_deleted CHECK (deleted = 'y' OR listener_username IS NOT NULL);
+
+CREATE TABLE IF NOT EXISTS notifications_schema (
+    id bigserial,
+    version text NOT NULL,
+    timestamp bigint NOT NULL,
+
+    CONSTRAINT pk_notifications_schema PRIMARY KEY (id)
+);
+
+INSERT INTO notifications_schema (version, timestamp) VALUES ('0.2.0', floor(extract(epoch from current_timestamp) * 1000)::bigint);

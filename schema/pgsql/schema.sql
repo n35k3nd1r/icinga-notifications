@@ -1,5 +1,15 @@
 CREATE EXTENSION IF NOT EXISTS citext;
 
+CREATE TABLE notifications_schema (
+    id bigserial,
+    version text NOT NULL,
+    timestamp bigint NOT NULL,
+
+    CONSTRAINT pk_notifications_schema PRIMARY KEY (id)
+);
+
+INSERT INTO notifications_schema (version, timestamp) VALUES ('0.2.0', floor(extract(epoch from current_timestamp) * 1000)::bigint);
+
 CREATE TYPE boolenum AS ENUM ( 'n', 'y' );
 CREATE TYPE incident_history_event_type AS ENUM (
     -- Order to be honored for events with identical millisecond timestamps.

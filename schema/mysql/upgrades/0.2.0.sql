@@ -52,3 +52,13 @@ UPDATE source SET listener_username = CONCAT('source-', source.id) WHERE deleted
 ALTER TABLE source
     ADD CONSTRAINT uk_source_listener_username UNIQUE (listener_username),
     ADD CONSTRAINT ck_source_listener_username_or_deleted CHECK (deleted = 'y' OR listener_username IS NOT NULL);
+
+CREATE TABLE IF NOT EXISTS notifications_schema (
+    id bigint NOT NULL AUTO_INCREMENT,
+    version text NOT NULL,
+    timestamp bigint NOT NULL,
+
+    CONSTRAINT pk_notifications_schema PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+INSERT INTO notifications_schema (version, timestamp) VALUES ('0.2.0', UNIX_TIMESTAMP() * 1000);

@@ -2,6 +2,10 @@ package main
 
 import (
 	"context"
+	"os/signal"
+	"syscall"
+	"time"
+
 	"github.com/icinga/icinga-go-library/database"
 	"github.com/icinga/icinga-go-library/logging"
 	"github.com/icinga/icinga-go-library/utils"
@@ -13,10 +17,8 @@ import (
 	"github.com/icinga/icinga-notifications/internal/listener"
 	"github.com/icinga/icinga-notifications/internal/object"
 	"github.com/icinga/icinga-notifications/internal/source"
+	"github.com/icinga/icinga-notifications/schema"
 	"github.com/okzk/sdnotify"
-	"os/signal"
-	"syscall"
-	"time"
 )
 
 func main() {
@@ -44,6 +46,10 @@ func main() {
 	logger.Infof("Connecting to database at '%s'", db.GetAddr())
 	if err := db.PingContext(ctx); err != nil {
 		logger.Fatalf("Cannot connect to the database: %+v", err)
+	}
+
+	if err := schema.Ensure(ctx, db, logs.GetChildLogger("database")); err != nil {
+		logger.Fatalf("Failed to initialize database schema: %+v", err)
 	}
 
 	if err := source.SyncConfigured(ctx, db, conf.Source, logger); err != nil {

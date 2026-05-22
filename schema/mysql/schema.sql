@@ -1,3 +1,13 @@
+CREATE TABLE notifications_schema (
+    id bigint NOT NULL AUTO_INCREMENT,
+    version text NOT NULL,
+    timestamp bigint NOT NULL,
+
+    CONSTRAINT pk_notifications_schema PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+INSERT INTO notifications_schema (version, timestamp) VALUES ('0.2.0', UNIX_TIMESTAMP() * 1000);
+
 CREATE TABLE available_channel_type (
     type varchar(255) NOT NULL,
     name text NOT NULL,
