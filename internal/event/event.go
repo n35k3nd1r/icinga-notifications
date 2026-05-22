@@ -40,14 +40,15 @@ func (e *Event) CompleteURL(icingaWebBaseUrl string) {
 		return
 	}
 
-	if !strings.HasSuffix(icingaWebBaseUrl, "/") {
-		icingaWebBaseUrl += "/"
+	u, err := url.Parse(e.URL)
+	if err == nil && u.Scheme != "" {
+		return
+	}
+	if icingaWebBaseUrl == "" {
+		return
 	}
 
-	u, err := url.Parse(e.URL)
-	if err != nil || u.Scheme == "" {
-		e.URL = icingaWebBaseUrl + e.URL
-	}
+	e.URL = strings.TrimRight(icingaWebBaseUrl, "/") + "/" + strings.TrimLeft(e.URL, "/")
 }
 
 // Validate validates the current event state.
